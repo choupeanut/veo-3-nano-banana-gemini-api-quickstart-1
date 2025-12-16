@@ -46,10 +46,11 @@ export async function POST(req: Request) {
         mimeType: imageMimeType,
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error generating image with Gemini:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: "Failed to generate image" },
+      { error: errorMessage || "Failed to generate image" },
       { status: 500 }
     );
   }

@@ -136,10 +136,11 @@ export async function POST(req: Request) {
         mimeType: responseMimeType,
       },
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error editing image with Gemini:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: "Failed to edit image" },
+      { error: errorMessage || "Failed to edit image" },
       { status: 500 }
     );
   }

@@ -272,8 +272,9 @@ const VeoStudio: React.FC = () => {
       });
 
       if (!resp.ok) {
-        console.error("Gemini API error:", resp.status, resp.statusText);
-        throw new Error(`API error: ${resp.status}`);
+        const errorData = await resp.json().catch(() => ({}));
+        console.error("Gemini API error:", resp.status, resp.statusText, errorData);
+        throw new Error(errorData.error || `API error: ${resp.status}`);
       }
 
       const json = await resp.json();
