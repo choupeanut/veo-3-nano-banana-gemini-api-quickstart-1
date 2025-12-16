@@ -41,7 +41,8 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
     if (model.includes("veo-3.0-fast")) return "Veo 3 - Fast";
     if (model.includes("veo-3.0")) return "Veo 3";
     if (model.includes("veo-2.0")) return "Veo 2";
-    if (model.includes("gemini-3-pro")) return "Gemini 3 Pro";
+    if (model.includes("gemini-3-pro"))
+      return "Banana Pro (gemini-3-pro-image-preview)";
     if (model.includes("gemini-2.5")) return "Gemini 2.5 Flash";
     if (model.includes("imagen-4.0")) return "Imagen 4.0 Fast";
     return model;

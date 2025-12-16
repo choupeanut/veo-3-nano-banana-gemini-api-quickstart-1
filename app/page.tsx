@@ -27,20 +27,20 @@ const VeoStudio: React.FC = () => {
   const [prompt, setPrompt] = useState(""); // Video or image prompt
   const [negativePrompt, setNegativePrompt] = useState("");
   const [aspectRatio, setAspectRatio] = useState("16:9");
-  const [selectedModel, setSelectedModel] = useState("veo-3.0-generate-001");
+  const [selectedModel, setSelectedModel] = useState("gemini-3-pro-image-preview");
 
   // Update selected model when mode changes
   useEffect(() => {
     if (mode === "create-video") {
       setSelectedModel("veo-3.0-generate-001");
     } else if (mode === "edit-image" || mode === "compose-image") {
-      setSelectedModel("gemini-2.5-flash-image-preview");
+      setSelectedModel("gemini-3-pro-image-preview");
     } else if (mode === "create-image") {
       if (
         !selectedModel.includes("gemini") &&
         !selectedModel.includes("imagen")
       ) {
-        setSelectedModel("gemini-2.5-flash-image-preview");
+        setSelectedModel("gemini-3-pro-image-preview");
       }
     }
   }, [mode, selectedModel]);
