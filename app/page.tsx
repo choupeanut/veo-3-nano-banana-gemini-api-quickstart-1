@@ -11,7 +11,6 @@ import Image from "next/image";
 import { Upload, Film, Image as ImageIcon } from "lucide-react";
 import Composer from "@/components/ui/Composer";
 import VideoPlayer from "@/components/ui/VideoPlayer";
-import { Skeleton } from "@/components/ui/skeleton";
 
 type VeoOperationName = string | null;
 
@@ -269,7 +268,7 @@ const VeoStudio: React.FC = () => {
       const resp = await fetch("/api/gemini/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: imagePrompt }),
+        body: JSON.stringify({ prompt: imagePrompt, model: selectedModel }),
       });
 
       if (!resp.ok) {
@@ -295,7 +294,7 @@ const VeoStudio: React.FC = () => {
       console.log("Resetting Gemini busy state");
       setGeminiBusy(false);
     }
-  }, [imagePrompt]);
+  }, [imagePrompt, selectedModel]);
 
   // Gemini image edit helper
   const editWithGemini = useCallback(async () => {

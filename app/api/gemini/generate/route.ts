@@ -11,13 +11,14 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const prompt = (body?.prompt as string) || "";
+    const model = (body?.model as string) || "gemini-2.5-flash-image-preview";
 
     if (!prompt) {
       return NextResponse.json({ error: "Missing prompt" }, { status: 400 });
     }
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-image-preview",
+      model,
       contents: prompt,
     });
 
