@@ -305,6 +305,7 @@ const VeoStudio: React.FC = () => {
     try {
       const form = new FormData();
       form.append("prompt", editPrompt);
+      form.append("model", selectedModel);
 
       if (imageFile) {
         form.append("imageFile", imageFile);
@@ -321,8 +322,9 @@ const VeoStudio: React.FC = () => {
       });
 
       if (!resp.ok) {
-        console.error("Gemini edit API error:", resp.status, resp.statusText);
-        throw new Error(`API error: ${resp.status}`);
+        const errorData = await resp.json().catch(() => ({}));
+        console.error("Gemini edit API error:", resp.status, resp.statusText, errorData);
+        throw new Error(errorData.error || `API error: ${resp.status}`);
       }
 
       const json = await resp.json();
@@ -335,14 +337,15 @@ const VeoStudio: React.FC = () => {
         console.error("Gemini edit API returned error:", json.error);
         throw new Error(json.error);
       }
-    } catch (e) {
+    } catch (e: unknown) {
       console.error("Error in editWithGemini:", e);
-      alert(`Failed to edit image: ${e.message}`);
+      const msg = e instanceof Error ? e.message : String(e);
+      alert(`Failed to edit image: ${msg}`);
     } finally {
       console.log("Resetting Gemini busy state after edit");
       setGeminiBusy(false);
     }
-  }, [editPrompt, imageFile, generatedImage]);
+  }, [editPrompt, imageFile, generatedImage, selectedModel]);
 
   // Gemini image compose helper
   const composeWithGemini = useCallback(async () => {
@@ -351,6 +354,7 @@ const VeoStudio: React.FC = () => {
     try {
       const form = new FormData();
       form.append("prompt", composePrompt);
+      form.append("model", selectedModel);
 
       // Add newly uploaded images first
       for (const file of multipleImageFiles) {
@@ -385,12 +389,9 @@ const VeoStudio: React.FC = () => {
       });
 
       if (!resp.ok) {
-        console.error(
-          "Gemini compose API error:",
-          resp.status,
-          resp.statusText
-        );
-        throw new Error(`API error: ${resp.status}`);
+        const errorData = await resp.json().catch(() => ({}));
+        console.error("Gemini compose API error:", resp.status, resp.statusText, errorData);
+        throw new Error(errorData.error || `API error: ${resp.status}`);
       }
 
       const json = await resp.json();
@@ -403,14 +404,15 @@ const VeoStudio: React.FC = () => {
         console.error("Gemini compose API returned error:", json.error);
         throw new Error(json.error);
       }
-    } catch (e) {
+    } catch (e: unknown) {
       console.error("Error in composeWithGemini:", e);
-      alert(`Failed to compose images: ${e.message}`);
+      const msg = e instanceof Error ? e.message : String(e);
+      alert(`Failed to compose images: ${msg}`);
     } finally {
       console.log("Resetting Gemini busy state after compose");
       setGeminiBusy(false);
     }
-  }, [composePrompt, multipleImageFiles, imageFile, generatedImage]);
+  }, [composePrompt, multipleImageFiles, imageFile, generatedImage, selectedModel]);
 
   // Start generation based on current mode
   const startGeneration = useCallback(async () => {
